@@ -1,0 +1,93 @@
+_target_: src.models.OperatorFormerModule
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.0
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 10
+
+net:
+  _target_: src.models.components.OperatorFormer
+  input_encoder_config:
+    _target_: src.models.components.dataclass_config.InputEncoderConfig
+    attn_type: "fourier"
+    in_features: 1
+    out_features: 96
+    d_model: 96
+    nhead: 8
+    dim_feedforward: 96
+    num_layers: 8
+    scale: [8, 4, 4, 2, 1, 1, 1, 1]
+    dropout: 0.05
+    activation: "geglu"
+    norm_first: true
+    bias: false
+    norm_config:
+      _target_: src.models.components.dataclass_config.NormlizationConfig
+      method: "InstanceNorm"
+      eps: 1.0e-5
+      elementwise_affine: true
+      affine: false
+    init_config:
+      _target_: src.models.components.dataclass_config.ParamInitConfig
+      method: "xavier"
+      gain: 1.0e-2
+      diagonal_weight: 1.0e-4
+    pos_config:
+      _target_: src.models.components.dataclass_config.PosEncodingConfig
+      method: "RoPE"
+      dim: 1
+      min_freq: 0.015625
+      scale: 1
+  query_encoder_config:
+    _target_: src.models.components.dataclass_config.QueryEncoderConfig
+    in_features: 1
+    d_model: 96
+    bias: false
+    scale: 2
+  crossattention_encoder_config:
+    _target_: src.models.components.dataclass_config.CrossAttentionEncoderConfig
+    attn_type: "fourier"
+    d_model: 96
+    nhead: 8
+    dim_feedforward: 96
+    num_layers: 1
+    scale: 2
+    dropout: 0.05
+    activation: "geglu"
+    norm_first: true
+    bias: false
+    residual: true
+    norm_config:
+      _target_: src.models.components.dataclass_config.NormlizationConfig
+      method: "InstanceNorm"
+      eps: 1.0e-5
+      elementwise_affine: true
+      affine: false
+    init_config:
+      _target_: src.models.components.dataclass_config.ParamInitConfig
+      method: "xavier"
+      gain: 1.0e-2
+      diagonal_weight: 1.0e-4
+    pos_config:
+      _target_: src.models.components.dataclass_config.PosEncodingConfig
+      method: "RoPE"
+      dim: 1
+      min_freq: 0.015625
+      scale: 1
+  propagator_decoder_config:
+    _target_: src.models.components.dataclass_config.PropagatorDecoderConfig
+    d_model: 96
+    out_features: 1
+    num_layers: 8
+    bias: False
+
+# compile model for faster training with pytorch 2.0
+compile: false
