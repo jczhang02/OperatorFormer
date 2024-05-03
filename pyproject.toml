@@ -1,0 +1,15 @@
+[project]
+name = "operatorformer"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Chengrui Zhang", email = "jczhang@live.it"},
+]
+dependencies = []
+requires-python = "==3.9.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
