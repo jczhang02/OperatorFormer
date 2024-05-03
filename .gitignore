@@ -1,3 +1,4 @@
 data/BURGERS/*
 logs/*
 outputs/*
+__pycache__
