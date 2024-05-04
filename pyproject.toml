@@ -5,7 +5,9 @@ description = "Default template for PDM package"
 authors = [
     {name = "Chengrui Zhang", email = "jczhang@live.it"},
 ]
-dependencies = []
+dependencies = [
+    "bcolors>=1.0.4",
+]
 requires-python = "==3.9.*"
 readme = "README.md"
 license = {text = "MIT"}

@@ -5,7 +5,7 @@
 groups = ["default", "torch", "hydra", "logger", "utils", "core"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:46b1fc5ec468968b58af945280ef4054b7313c2c9e2faa1784294f0c7da0f70d"
+content_hash = "sha256:a08a128565f865bf3044c221f92d3f616425ae33c6152f45993362c19f8b3f98"
 
 [[package]]
 name = "aim"
@@ -241,6 +241,17 @@ groups = ["logger"]
 files = [
     {file = "base58-2.0.1-py3-none-any.whl", hash = "sha256:447adc750d6b642987ffc6d397ecd15a799852d5f6a1d308d384500243825058"},
     {file = "base58-2.0.1.tar.gz", hash = "sha256:365c9561d9babac1b5f18ee797508cd54937a724b6e419a130abad69cec5ca79"},
+]
+
+[[package]]
+name = "bcolors"
+version = "1.0.4"
+requires_python = ">=3.6"
+summary = "A module for coloring print statement."
+groups = ["default"]
+files = [
+    {file = "bcolors-1.0.4-py3-none-any.whl", hash = "sha256:95cb6cf66f85ec3b6672e340f4506b82b220720c0adc4a25984370d776cc4083"},
+    {file = "bcolors-1.0.4.tar.gz", hash = "sha256:41daf963a58f4d8dfc5d8fbec3cf32da577126d6dfd3e4d8edcb3630d62656e8"},
 ]
 
 [[package]]

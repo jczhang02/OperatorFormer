@@ -21,7 +21,7 @@ class PropagatorDecoder(nn.Module):
             ]
         )
         self.out_proj = nn.Sequential(
-            nn.Linear(d_model, d_model // 2, bias=False),
+            nn.Linear(d_model, d_model // 2, bias=bias),
             nn.GELU(),
             nn.Linear(d_model // 2, out_features, bias=True),
         )

@@ -3,8 +3,8 @@ _target_: src.models.OperatorFormerModule
 optimizer:
   _target_: torch.optim.Adam
   _partial_: true
-  lr: 0.001
-  weight_decay: 0.0
+  lr: 8.0e-4
+  weight_decay: 1.0e-4
 
 scheduler:
   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
@@ -12,6 +12,15 @@ scheduler:
   mode: min
   factor: 0.1
   patience: 10
+
+# scheduler:
+#   _target_: torch.optim.lr_scheduler.OneCycleLR
+#   _partial_: true
+#   max_lr: ${model.optimizer.lr}
+#   total_steps: ${trainer.max_epochs}
+#   div_factor: 1.0e-8
+#   pct_start: 0.2
+#   final_div_factor: 1.0e-8
 
 net:
   _target_: src.models.components.OperatorFormer
@@ -23,8 +32,8 @@ net:
     d_model: 96
     nhead: 8
     dim_feedforward: 96
-    num_layers: 8
-    scale: [8, 4, 4, 2, 1, 1, 1, 1]
+    num_layers: 4
+    scale: [8, 4, 4, 2]
     dropout: 0.05
     activation: "geglu"
     norm_first: true
@@ -38,8 +47,8 @@ net:
     init_config:
       _target_: src.models.components.dataclass_config.ParamInitConfig
       method: "xavier"
-      gain: 1.0e-2
-      diagonal_weight: 1.0e-4
+      gain: 1.0e-6
+      diagonal_weight: 1.0e-9
     pos_config:
       _target_: src.models.components.dataclass_config.PosEncodingConfig
       method: "RoPE"
@@ -59,7 +68,7 @@ net:
     nhead: 8
     dim_feedforward: 96
     num_layers: 1
-    scale: 2
+    scale: 1
     dropout: 0.05
     activation: "geglu"
     norm_first: true
@@ -74,8 +83,8 @@ net:
     init_config:
       _target_: src.models.components.dataclass_config.ParamInitConfig
       method: "xavier"
-      gain: 1.0e-2
-      diagonal_weight: 1.0e-4
+      gain: 1.0e-6
+      diagonal_weight: 1.0e-9
     pos_config:
       _target_: src.models.components.dataclass_config.PosEncodingConfig
       method: "RoPE"
@@ -86,7 +95,7 @@ net:
     _target_: src.models.components.dataclass_config.PropagatorDecoderConfig
     d_model: 96
     out_features: 1
-    num_layers: 8
+    num_layers: 3
     bias: False
 
 # compile model for faster training with pytorch 2.0

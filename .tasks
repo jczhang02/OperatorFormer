@@ -1,0 +1,27 @@
+# vim: set fenc=utf-8 ft=ini:
+# see: https://github.com/skywind3000/asynctasks.vim/wiki/Task-Config
+
+# define a new task named "file-build"
+[thinkpad-test]
+
+# shell command, use quotation for filenames containing spaces
+# check ":AsyncTaskMacro" to see available macros
+command=python src/train.py experiment=thinkpad_test
+
+# working directory, can change to $(VIM_ROOT) for project root
+cwd=$(VIM_ROOT)
+
+# output mode, can be one of quickfix and terminal
+# - quickfix: output to quickfix window
+# - terminal: run the command in the internal terminal
+output=terminal
+pos=gnome
+
+# this is for output=quickfix only
+# if it is omitted, vim's current errorformat will be used.
+errorformat=%f:%l:%m
+
+# save file before execute
+save=1
+
+

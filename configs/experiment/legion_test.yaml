@@ -15,11 +15,11 @@ defaults:
 
 tags: ["operatorformer", "test"]
 
-seed: 1127802
+seed: 114514
 
 trainer:
-  min_epochs: 10
-  max_epochs: 10
+  min_epochs: 1000
+  max_epochs: 100000
   check_val_every_n_epoch: 1
   # gradient_clip_val: 0.5
 

@@ -43,6 +43,9 @@ class BURGERS(Dataset):
         y_data: NDArray[np.float64] = raw_data["u"][:, ::subsampling_rate]
         y_data = y_data[:total_size, :]
 
+        assert not np.isnan(x_data).any(), "Please check data."
+        assert not np.isnan(y_data).any(), "Please check data."
+
         self.x_data: Tensor = torch.as_tensor(
             x_data.reshape(total_size, resolution, 1),
             dtype=torch.float32,
@@ -79,7 +82,7 @@ class BURGERS(Dataset):
 
 
 if __name__ == "__main__":
-    test_dataset = BURGERS(root="/home/jc/dev/lightning/data/")
+    test_dataset = BURGERS(root="/home/jc/dev/OperatorFormer/data/")
     print(f"length of test_dataset: {len(test_dataset)}")
 
     x, y, pos1, pos2 = test_dataset.__getitem__(1)

@@ -71,6 +71,7 @@ class OperatorFormerModule(LightningModule):
         :param batch_idx: The index of the current batch.
         :return: A tensor of losses between model predictions and targets.
         """
+
         loss, targets = self.model_step(batch)
 
         # update and log metrics

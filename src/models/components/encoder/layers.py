@@ -73,7 +73,6 @@ class TransformerEncoderModule(nn.Module):
             )
 
     def forward(self, x: Tensor, pos: Optional[Tensor] = None, mask: Optional[Tensor] = None) -> Tensor:
-        # return self.transformer(x, pos) if self.attn_type == "standard" else self.transformer(x, pos, mask)
         return self.transformer(x, pos, mask)
 
 
