@@ -37,7 +37,8 @@ class PositionalEncoding(nn.Module):
     def __init__(self, d_model: int) -> None:
         super(PositionalEncoding, self).__init__()
         self.d_model: int = d_model
-        self.inv_freq: Tensor = 1.0 / (10000 ** (torch.arange(0, d_model, 2).float() / d_model))
+        inv_freq: Tensor = 1.0 / (10000 ** (torch.arange(0, d_model, 2).float() / d_model))
+        self.register_buffer("inv_freq", inv_freq)
 
     def forward(self, pos: Tensor) -> Tensor:
         def get_emb(sin_inp: Tensor) -> Tensor:
@@ -61,7 +62,8 @@ class PositionalEncoding(nn.Module):
 class RotaryPositionalEncoding(nn.Module):
     def __init__(self, dim: int, min_freq: float = 1 / 64, scale: float = 1.0) -> None:
         super(RotaryPositionalEncoding, self).__init__()
-        self.inv_freq: Tensor = 1.0 / (10000 ** torch.arange(0, dim, 2, dtype=torch.float) / dim)
+        inv_freq: Tensor = 1.0 / (10000 ** torch.arange(0, dim, 2, dtype=torch.float) / dim)
+        self.register_buffer("inv_freq", inv_freq)
         self.min_freq: float = min_freq
         self.scale: float = scale
 
