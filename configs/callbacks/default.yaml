@@ -11,6 +11,7 @@ model_checkpoint:
   monitor: "val/loss"
   mode: "max"
   save_last: True
+  save_on_train_epoch_end: True
   auto_insert_metric_name: False
 
 early_stopping:

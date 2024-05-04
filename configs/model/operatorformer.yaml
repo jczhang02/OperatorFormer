@@ -3,15 +3,17 @@ _target_: src.models.OperatorFormerModule
 optimizer:
   _target_: torch.optim.Adam
   _partial_: true
-  lr: 0.001
+  lr: 8.0e-4
   weight_decay: 0.0
 
 scheduler:
-  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _target_: torch.optim.lr_scheduler.OneCycleLR
   _partial_: true
-  mode: min
-  factor: 0.1
-  patience: 10
+  max_lr: ${model.optimizer.lr}
+  total_steps: ${trainer.max_epochs}
+  div_factor: 1.0e-4
+  pct_start: 0.2
+  final_div_factor: 1.0e-4
 
 net:
   _target_: src.models.components.OperatorFormer
@@ -26,7 +28,7 @@ net:
     num_layers: 8
     scale: [8, 4, 4, 2, 1, 1, 1, 1]
     dropout: 0.05
-    activation: "geglu"
+    activation: "gelu"
     norm_first: true
     bias: false
     norm_config:

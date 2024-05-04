@@ -7,7 +7,7 @@ defaults:
   - data: burges
   - model: operatorformer
   - callbacks: default
-  - logger: null # set logger here or use command line (e.g. `python train.py logger=tensorboard`)
+  - logger: null
   - trainer: default
   - paths: default
   - extras: default
