@@ -5,7 +5,7 @@
 groups = ["default", "torch", "hydra", "logger", "utils", "core"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:a08a128565f865bf3044c221f92d3f616425ae33c6152f45993362c19f8b3f98"
+content_hash = "sha256:af05e562acf1c94f334daf1e1493d56470569504383945fe3e84be3090b5a94f"
 
 [[package]]
 name = "aim"
@@ -245,13 +245,11 @@ files = [
 
 [[package]]
 name = "bcolors"
-version = "1.0.4"
-requires_python = ">=3.6"
+version = "1.0.2"
 summary = "A module for coloring print statement."
 groups = ["default"]
 files = [
-    {file = "bcolors-1.0.4-py3-none-any.whl", hash = "sha256:95cb6cf66f85ec3b6672e340f4506b82b220720c0adc4a25984370d776cc4083"},
-    {file = "bcolors-1.0.4.tar.gz", hash = "sha256:41daf963a58f4d8dfc5d8fbec3cf32da577126d6dfd3e4d8edcb3630d62656e8"},
+    {file = "bcolors-1.0.2.tar.gz", hash = "sha256:463fb4e0371a12fc6c52466a25c995a9ba4e8b3d819b7bef440c87b2fb410806"},
 ]
 
 [[package]]
