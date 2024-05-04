@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import List, Literal, Optional
+from typing import List, Literal, Optional, Tuple
 
 import torch
 from einops import rearrange, repeat
@@ -77,7 +77,7 @@ class StandardMultiHeadAttention(nn.Module):
             The calculated attention value z.
         """
         qkv_projed: Tensor = self.qkv_proj(src)
-        qkv_projed_sep: List[Tensor] = torch.chunk(qkv_projed, chunks=3, dim=-1)
+        qkv_projed_sep: Tuple[Tensor, ...] = torch.chunk(qkv_projed, chunks=3, dim=-1)
 
         q: Tensor
         k: Tensor
