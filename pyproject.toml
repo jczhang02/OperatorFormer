@@ -39,7 +39,7 @@ utils = [
 ]
 core = [
     "einops>=0.8.0",
-    "torch==2.2.1",
+    "torch==2.1.2",
 ]
 
 [tool.pyright]
