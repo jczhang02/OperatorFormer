@@ -63,7 +63,9 @@ class OperatorFormerModule(LightningModule):
         loss = self.criterion(pred, y)
         return loss, y
 
-    def training_step(self, batch: Tuple[Tensor, Tensor, Tensor, Tensor], batch_idx: int) -> Tensor:
+    def training_step(
+        self, batch: Tuple[Tensor, Tensor, Optional[Tensor], Optional[Tensor]], batch_idx: int
+    ) -> Tensor:
         """Perform a single training step on a batch of data from the training set.
 
         :param batch: A batch of data (a tuple) containing the input tensor of images and target
@@ -72,7 +74,7 @@ class OperatorFormerModule(LightningModule):
         :return: A tensor of losses between model predictions and targets.
         """
 
-        loss, targets = self.model_step(batch)
+        loss, _ = self.model_step(batch)
 
         # update and log metrics
         self.train_loss(loss)
@@ -141,6 +143,16 @@ class OperatorFormerModule(LightningModule):
         """
         if self.hparams["compile"] and stage == "fit":
             self.net = torch.compile(self.net)
+
+    def on_before_optimizer_step(self, optimizer) -> None:
+        pass
+
+    def on_after_backward(self):
+        # example to inspect gradient information in tensorboard
+        # from utils import check_net_value
+
+        # check_net_value(self.net)
+        pass
 
     def configure_optimizers(self) -> Dict[str, Any]:
         """Choose what optimizers and learning-rate schedulers to use in your optimization.

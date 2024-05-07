@@ -6,21 +6,22 @@ optimizer:
   lr: 8.0e-4
   weight_decay: 1.0e-4
 
-scheduler:
-  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-  _partial_: true
-  mode: min
-  factor: 0.1
-  patience: 10
-
 # scheduler:
-#   _target_: torch.optim.lr_scheduler.OneCycleLR
+#   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
 #   _partial_: true
-#   max_lr: ${model.optimizer.lr}
-#   total_steps: ${trainer.max_epochs}
-#   div_factor: 1.0e-8
-#   pct_start: 0.2
-#   final_div_factor: 1.0e-8
+#   mode: min
+#   factor: 0.1
+#   patience: 10
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.OneCycleLR
+  _partial_: true
+  max_lr: ${model.optimizer.lr}
+  total_steps: ${trainer.max_epochs}
+  # total_steps: 10
+  div_factor: 1.0e4
+  pct_start: 0.2
+  final_div_factor: 1.0e4
 
 net:
   _target_: src.models.components.OperatorFormer
@@ -46,9 +47,9 @@ net:
       affine: false
     init_config:
       _target_: src.models.components.dataclass_config.ParamInitConfig
-      method: "xavier"
+      method: "orthogonal"
       gain: 1.0e-6
-      diagonal_weight: 1.0e-9
+      diagonal_weight: 1.0e-6
     pos_config:
       _target_: src.models.components.dataclass_config.PosEncodingConfig
       method: "RoPE"
@@ -82,9 +83,9 @@ net:
       affine: false
     init_config:
       _target_: src.models.components.dataclass_config.ParamInitConfig
-      method: "xavier"
+      method: "orthogonal"
       gain: 1.0e-6
-      diagonal_weight: 1.0e-9
+      diagonal_weight: 1.0e-6
     pos_config:
       _target_: src.models.components.dataclass_config.PosEncodingConfig
       method: "RoPE"
@@ -95,8 +96,8 @@ net:
     _target_: src.models.components.dataclass_config.PropagatorDecoderConfig
     d_model: 96
     out_features: 1
-    num_layers: 8
-    bias: True
+    num_layers: 4
+    bias: False
 
 # compile model for faster training with pytorch 2.0
 compile: false

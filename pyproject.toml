@@ -41,6 +41,9 @@ core = [
     "einops>=0.8.0",
     "torch==2.1.2",
 ]
+log = [
+    "tensorboard>=2.16.2",
+]
 
 [tool.pyright]
 root = ["src"]

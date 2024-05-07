@@ -29,8 +29,8 @@ model:
   compile: false
 
 data:
-  batch_size: 32
-  train_val_test_split: [1_000, 100, 200]
+  batch_size: 16
+  train_val_test_split: [1_024, 100, 200]
 logger:
   tensorboard:
     name: "Burges 1D"

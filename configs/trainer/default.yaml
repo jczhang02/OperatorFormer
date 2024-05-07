@@ -8,8 +8,10 @@ max_epochs: 20000
 accelerator: cpu
 devices: 1
 
+log_every_n_steps: 10
+
 # mixed precision for extra speed-up
-# precision: 64
+precision: 64
 
 detect_anomaly: False
 
