@@ -32,8 +32,8 @@ net:
     d_model: 96
     nhead: 8
     dim_feedforward: 96
-    num_layers: 4
-    scale: [8, 4, 4, 2]
+    num_layers: 8
+    scale: [8, 4, 4, 2, 1, 1, 1, 1]
     dropout: 0.05
     activation: "geglu"
     norm_first: true
@@ -95,8 +95,8 @@ net:
     _target_: src.models.components.dataclass_config.PropagatorDecoderConfig
     d_model: 96
     out_features: 1
-    num_layers: 3
-    bias: False
+    num_layers: 8
+    bias: True
 
 # compile model for faster training with pytorch 2.0
 compile: false

@@ -16,6 +16,10 @@ from utils import (
     task_wrapper,
 )
 
+import torch
+
+torch.autograd.set_detect_anomaly(True)
+
 
 rootutils.setup_root(__file__, indicator="pyproject.toml", pythonpath=True)
 # ------------------------------------------------------------------------------------ #
