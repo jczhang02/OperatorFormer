@@ -48,6 +48,12 @@ Train model with chosen experiment configuration from [configs/experiment/](conf
 
 ```bash
 python src/train.py experiment=experiment_name.yaml
+
+# E.g. Simple test on cpu
+python src/train.py experiment=thinkpad_test
+
+# E.g. Simple test on gpu
+python src/train.py experiment=shanhe_burges
 ```
 
 You can override any parameter from command line like this
