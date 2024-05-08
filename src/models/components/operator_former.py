@@ -29,6 +29,7 @@ class OperatorFormer(nn.Module):
         self.input_encoder = InputEncoder(*_unpack(input_encoder_config))
         self.query_encoder = QueryEncoder(*_unpack(query_encoder_config))
         self.crossattention_encoder = CrossAttentionEncoder(*_unpack(crossattention_encoder_config))
+
         self.decoder = PropagatorDecoder(*_unpack(propagator_decoder_config))
 
     def forward(

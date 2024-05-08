@@ -41,6 +41,7 @@ class SimpleOperatorLearningL2Loss(nn.Module):
             pred=self._central_diff(pred, pred.shape[1]),
             gt=self._central_diff(gt, gt.shape[1]),
         )
+        print(f"loss 1: {pred_loss}, loss 2: {d_loss}")
 
         return self.weight[0] * pred_loss + self.weight[1] * d_loss
 

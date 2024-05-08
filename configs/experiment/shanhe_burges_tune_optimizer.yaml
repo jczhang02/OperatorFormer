@@ -13,7 +13,7 @@ defaults:
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["operatorformer", "test"]
+tags: ["RMSprop"]
 
 seed: 114514
 
@@ -27,7 +27,17 @@ trainer:
 
 model:
   optimizer:
+    _target_: torch.optim.Adam
     lr: 8.0e-4
+  scheduler:
+    _target_: torch.optim.lr_scheduler.OneCycleLR
+    _partial_: true
+    max_lr: ${model.optimizer.lr}
+    total_steps: ${trainer.max_epochs}
+    # total_steps: 10
+    div_factor: 1
+    pct_start: 0.3
+    final_div_factor: 1
   compile: false
   net:
     input_encoder_config:
@@ -37,8 +47,8 @@ model:
       scale: [8, 4, 4, 2]
 
 data:
-  batch_size: 4
+  batch_size: 16
   train_val_test_split: [1_024, 100, 200]
 logger:
   tensorboard:
-    name: "Burges 1D"
+    name: "Burges 1D RMSprop"

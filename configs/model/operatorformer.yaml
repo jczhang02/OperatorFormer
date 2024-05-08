@@ -33,8 +33,8 @@ net:
     d_model: 96
     nhead: 8
     dim_feedforward: 96
-    num_layers: 8
-    scale: [8, 4, 4, 2, 1, 1, 1, 1]
+    num_layers: 4
+    scale: [8, 4, 4, 1]
     dropout: 0.05
     activation: "geglu"
     norm_first: true
@@ -48,8 +48,8 @@ net:
     init_config:
       _target_: src.models.components.dataclass_config.ParamInitConfig
       method: "orthogonal"
-      gain: 1.0e-6
-      diagonal_weight: 1.0e-6
+      gain: 0.01041
+      diagonal_weight: 0.01041
     pos_config:
       _target_: src.models.components.dataclass_config.PosEncodingConfig
       method: "RoPE"
@@ -84,8 +84,8 @@ net:
     init_config:
       _target_: src.models.components.dataclass_config.ParamInitConfig
       method: "orthogonal"
-      gain: 1.0e-6
-      diagonal_weight: 1.0e-6
+      gain: 0.01041
+      diagonal_weight: 0.01041
     pos_config:
       _target_: src.models.components.dataclass_config.PosEncodingConfig
       method: "RoPE"
