@@ -32,6 +32,13 @@ conda activate $NAME
 pip install -r requirements.txt
 ```
 
+## Dataset
+
+Download dataset via [Google Drive](https://drive.google.com/drive/folders/1UnbQh2WWc6knEHbLn-ZaXrKUZhp7pjt-).
+| Dataset Name | Download file name | Size
+| ------------- | -------------- | ---------
+| Burgers 1D | [Burgers_R10.zip](https://drive.google.com/file/d/16a8od4vidbiNR3WtaBPCSZ0T3moxjhYe/view?usp=drive_link) | 614.8 MB
+
 ## How to run
 
 Train model with default configuration
