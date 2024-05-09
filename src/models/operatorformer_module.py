@@ -36,6 +36,8 @@ class OperatorFormerModule(LightningModule):
         input_pos: Optional[Tensor] = None,
         query_pos: Optional[Tensor] = None,
     ) -> Tensor:
+        assert input_pos is not None
+        x = torch.cat((x, input_pos), dim=-1)
         return self.net(x, input_pos, query_pos)
 
     def on_train_start(self) -> None:

@@ -2,10 +2,10 @@ _target_: src.models.components.OperatorFormer
 input_encoder_config:
   _target_: src.models.components.dataclass_config.InputEncoderConfig
   attn_type: "fourier"
-  in_features: 1
+  in_features: 2
   out_features: 96
   d_model: 96
-  nhead: 8
+  nhead: 1
   dim_feedforward: 96
   num_layers: 4
   scale: [8, 4, 4, 1]

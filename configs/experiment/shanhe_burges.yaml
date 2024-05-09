@@ -21,9 +21,9 @@ trainer:
   min_epochs: 20000
   max_epochs: 20000
   check_val_every_n_epoch: 1
-  gradient_clip_val: 0.5
-  detect_anomaly: True
-  deterministic: True
+  # gradient_clip_val: 0.5
+  detect_anomaly: False
+  deterministic: False
 
 model:
   optimizer:
@@ -37,8 +37,8 @@ model:
       scale: [8, 4, 4, 2]
 
 data:
-  batch_size: 4
+  batch_size: 16
   train_val_test_split: [1_024, 100, 200]
 logger:
   tensorboard:
-    name: "Burges 1D"
+    name: "Burges 1D Test Loss"

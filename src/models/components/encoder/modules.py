@@ -57,8 +57,7 @@ class InputEncoder(nn.Module):
 
     def forward(self, x: Tensor, input_pos: Optional[Tensor] = None, mask: Optional[Tensor] = None) -> Tensor:
         ax_embedding: Tensor = self.in_embeddings(x)
-        ax_embedding_after_dropout = self.dropout(ax_embedding)
-        z: Tensor = self.encoder(ax_embedding_after_dropout, input_pos, mask)
+        z: Tensor = self.encoder(ax_embedding, input_pos, mask)
         out_embeddng: Tensor = self.out_embeddings(z)
 
         return out_embeddng

@@ -1,11 +1,14 @@
 import torch
 from torch import nn
-
+import numpy as np
 import rootutils
+import scipy
+from scipy.io import loadmat
+from torchinfo import summary
 
 rootutils.setup_root(__file__, indicator="pyproject.toml", pythonpath=True)
 from torch.utils.data import random_split
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, TensorDataset
 from src.models.components import OperatorFormer
 from src.models.components.dataclass_config import (
     InputEncoderConfig,
@@ -66,38 +69,59 @@ device = "cuda"
 @hydra.main(version_base=None, config_path="./", config_name="test_for_train")
 def train(cfg):
     dataset = BURGERS(root="/zhangchrai23/OperatorFormer/data", total_size=1100)
-    train_dataset, test_dataset = random_split(dataset, [1000, 100])
-    train_dataloader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+    data = loadmat("/zhangchrai23/OperatorFormer/data/BURGERS/burgers_data_R10.mat")
+    sub = 2**13 // 2048
+    x_data = data["a"][:, ::sub]  # input: u(x, 0)
+    y_data = data["u"][:, ::sub]  # solution: u(x, 1)
+
+    ntrain = 1000
+
+    x_train = x_data[:ntrain, :]
+    y_train = y_data[:ntrain, :]
+    res = 2048
+
+    x_train = torch.as_tensor(x_train.reshape(ntrain, res, 1), dtype=torch.float32)
+    y_train = torch.as_tensor(y_train.reshape(ntrain, res, 1), dtype=torch.float32)
+    train_dataloader = DataLoader(TensorDataset(x_train, y_train), batch_size=4, shuffle=False)
     model: nn.Module = hydra.utils.instantiate(cfg)
     model = model.to(device)
+    # print(summary(model, [(1, 2048, 1), (1, 2048, 1), (1, 2048, 1)], depth=30))
     loss_fn = SimpleOperatorLearningL2Loss()
     optim = torch.optim.Adam(
         model.parameters(),
-        lr=1e-2,
+        lr=8e-4,
     )
     sch = torch.optim.lr_scheduler.OneCycleLR(
         optim,
-        max_lr=1e-2,
-        total_steps=10000,
+        max_lr=8e-4,
+        total_steps=100000,
         div_factor=1e4,
         pct_start=0.2,
         final_div_factor=1e4,
     )
+    gridx = torch.tensor(np.linspace(0, 1, res), dtype=torch.float32)
+    gridx = gridx.reshape(1, res, 1)
 
     train_epochs_loss = []
 
-    for epoch in range(1000):
+    for epoch in range(10000000):
         model.train()
         epoch_loss = []
 
-        for _, batch in enumerate(train_dataloader):
-            x, y, input_pos, query_pos = batch
+        for idx1, batch in enumerate(train_dataloader):
+            x, y = batch
             x = x.to(device)
             y = y.to(device)
+
+            input_pos = prop_pos = gridx.repeat([x.shape[0], 1, 1])
             input_pos = input_pos.to(device)
-            query_pos = query_pos.to(device)
+            query_pos = prop_pos.to(device)
+
+            x = torch.cat((x, input_pos), dim=-1)
 
             pred = model(x, input_pos, query_pos)
+            print(f"pred in {idx1}: {pred}")
+            print(f"y in {idx1}: {y}")
 
             pred_loss = rel_loss(pred, y, 2)
 
@@ -112,7 +136,7 @@ def train(cfg):
             optim.zero_grad()
             loss.backward()
             optim.step()
-            sch.step()
+            # sch.step()
             epoch_loss.append(loss.item())
             print(f"loss: {loss.item()}")
 
