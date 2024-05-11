@@ -6,10 +6,12 @@ from lightning import LightningDataModule, LightningModule, Trainer
 from lightning.pytorch.loggers import Logger
 from omegaconf import DictConfig
 
-from .utils import RankedLogger, extras, instantiate_loggers, log_hyperparameters, task_wrapper
-
 
 rootutils.setup_root(__file__, indicator=".project-root", pythonpath=True)
+
+from src.utils import RankedLogger, extras, instantiate_loggers, log_hyperparameters, task_wrapper
+
+
 # ------------------------------------------------------------------------------------ #
 # the setup_root above is equivalent to:
 # - adding project root dir to PYTHONPATH

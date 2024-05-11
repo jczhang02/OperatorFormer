@@ -6,10 +6,11 @@ defaults:
   - override /callbacks: default
   - override /trainer: gpu
   - override /logger: aim
+  - override /hydra/launcher: submitit_slurm
 
 task_name: "Burgres_1D_nhead"
 
-tags: ["burgers1d"]
+tags: ["burgers1d", "test_nhead"]
 
 seed: 114514
 
@@ -39,3 +40,9 @@ logger:
   aim:
     experiment: "Burgres 1D nhead"
     run_name: "nhead_test"
+
+hydra:
+  launcher:
+    submitit_folder: ${hydra.sweep.dir}/.submitit/%j
+    name: ${task_name}
+    partition: LocalQ
