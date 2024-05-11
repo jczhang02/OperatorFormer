@@ -18,8 +18,8 @@ tags: ["operatorformer", "test"]
 seed: 1127802
 
 trainer:
-  min_epochs: 1
-  max_epochs: 1
+  min_epochs: 2
+  max_epochs: 2
   check_val_every_n_epoch: 1
   # gradient_clip_val: 0.5
 
@@ -30,7 +30,7 @@ model:
 
 data:
   batch_size: 4
-  train_val_test_split: [1_00, 10, 20]
+  train_val_test_split: [1_0, 10, 20]
 logger:
   tensorboard:
     name: "Thinkpad test"

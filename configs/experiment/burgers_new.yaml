@@ -13,7 +13,7 @@ defaults:
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["operatorformer", "test", "loss"]
+tags: ["operatorformer", "test", "loss", "new"]
 
 seed: 114514
 
@@ -21,24 +21,23 @@ trainer:
   min_epochs: 20000
   max_epochs: 20000
   check_val_every_n_epoch: 100
-  gradient_clip_val: 0.5
   detect_anomaly: False
   deterministic: False
 
 model:
   optimizer:
-    lr: 8.0e-4
+    lr: 1e-4
   compile: false
   net:
     input_encoder_config:
       attn_type: "galerkin"
-      nhead: 1
+      nhead: 4
       num_layers: 4
       scale: [8, 4, 4, 2]
 
 data:
-  batch_size: 32
+  batch_size: 16
   train_val_test_split: [1_024, 100, 200]
 logger:
   tensorboard:
-    name: "Burgres 1D Test Loss No Stop"
+    name: "Burgres 1D Test Loss Test New"

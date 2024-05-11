@@ -1,10 +1,79 @@
-from typing import List, Tuple
+from typing import Tuple
 
 import torch
 from torch import Tensor, nn
+from torchmetrics import Metric
 
 
-__all__ = ["SimpleOperatorLearningL2Loss"]
+__all__ = ["RelativeError", "SimpleOperatorLearningL2Loss"]
+
+
+class RelativeError(Metric):
+    def __init__(
+        self,
+        reduction: bool = True,
+        eps: float = 1e-6,
+        weight: Tuple[float, ...] = (1.0, 1e-3),
+    ) -> None:
+        """Initialization of L2Loss class.
+
+        Parameters
+        ----------
+        reduction : bool
+            Whether to perform mean loss on batch_size dimension.
+        eps : float
+            The eps value. Default is `1e-6`.
+        """
+        super().__init__()
+        self.reduction: bool = reduction
+        self.eps: float = eps
+        self.weight: Tuple[float, ...] = weight
+        self.add_state("relative_error", default=torch.tensor(0, dtype=torch.float64), dist_reduce_fx="mean")
+
+    def update(self, preds: Tensor, target: Tensor) -> None:
+        self.relative_error = self._l2_norm(preds, target, reduction=self.reduction).to(torch.float64)
+
+    def compute(self) -> Tensor:
+        return self.relative_error
+
+    @staticmethod
+    def _l2_norm(pred: Tensor, gt: Tensor, reduction: bool = True, eps: float = 1e-6) -> Tensor:
+        """Perform l2 norm with `pred` and `gt`.
+
+        Parameters
+        ----------
+        pred : Tensor
+            The output of model, i.e.,
+            the expected sampling value of solution function derived from the proposed method.
+        gt : Tensor
+            The real ground truth, i.e.,
+            the real sampling value of solution funcion derived from PDE solvers.
+
+        Returns
+        -------
+        Tensor
+            The calculated loss value.
+        """
+        num_examples: int = pred.shape[0]
+        diff_norms: Tensor = torch.norm(
+            input=pred.reshape(num_examples, -1) - gt.reshape(num_examples, -1),
+            p=2,
+            dim=1,
+        )
+        gt_norms: Tensor = (
+            torch.norm(
+                input=gt.reshape(num_examples, -1),
+                p=2,
+                dim=1,
+            )
+            + eps
+        )
+        loss: Tensor = torch.sum(diff_norms / gt_norms)
+
+        if reduction:
+            loss = loss / num_examples
+
+        return loss
 
 
 class SimpleOperatorLearningL2Loss(nn.Module):

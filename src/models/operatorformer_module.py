@@ -5,7 +5,7 @@ from lightning import LightningModule
 from torch import Tensor, nn
 from torchmetrics import MeanMetric, MinMetric
 
-from .components import SimpleOperatorLearningL2Loss
+from .components import SimpleOperatorLearningL2Loss, RelativeError
 
 
 __all__ = ["OperatorFormerModule"]
@@ -24,11 +24,16 @@ class OperatorFormerModule(LightningModule):
         self.net = net
         self.criterion = SimpleOperatorLearningL2Loss()
 
+        self.train_re = RelativeError()
+        self.val_re = RelativeError()
+        self.test_re = RelativeError()
+
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()
         self.test_loss = MeanMetric()
 
         self.val_loss_best = MinMetric()
+        self.val_re_best = MinMetric()
 
     def forward(
         self,
@@ -46,7 +51,9 @@ class OperatorFormerModule(LightningModule):
         # so it's worth to make sure validation metrics don't store results from these checks
         self.val_loss.reset()
 
-    def model_step(self, batch: Tuple[Tensor, Tensor, Optional[Tensor], Optional[Tensor]]) -> Tuple[Tensor, Tensor]:
+    def model_step(
+        self, batch: Tuple[Tensor, Tensor, Optional[Tensor], Optional[Tensor]]
+    ) -> Tuple[Tensor, Tensor, Tensor]:
         """Perform a single model step on a batch of data.
 
         :param batch: A batch of data (a tuple) containing the input tensor of images and target labels.
@@ -63,7 +70,7 @@ class OperatorFormerModule(LightningModule):
         x, y, input_pos, query_pos = batch
         pred = self.forward(x, input_pos, query_pos)
         loss = self.criterion(pred, y)
-        return loss, y
+        return loss, pred, y
 
     def training_step(
         self, batch: Tuple[Tensor, Tensor, Optional[Tensor], Optional[Tensor]], batch_idx: int
@@ -76,11 +83,13 @@ class OperatorFormerModule(LightningModule):
         :return: A tensor of losses between model predictions and targets.
         """
 
-        loss, _ = self.model_step(batch)
+        loss, pred, y = self.model_step(batch)
 
         # update and log metrics
         self.train_loss(loss)
+        self.train_re(pred, y)
         self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/relative_error", self.train_re, on_step=False, on_epoch=True, prog_bar=True)
 
         # return loss or backpropagation will fail
         return loss
@@ -98,11 +107,13 @@ class OperatorFormerModule(LightningModule):
             labels.
         :param batch_idx: The index of the current batch.
         """
-        loss, targets = self.model_step(batch)
+        loss, pred, target = self.model_step(batch)
 
         # update and log metrics
         self.val_loss(loss)
+        self.val_re(pred, target)
         self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/relative_error", self.val_re, on_step=False, on_epoch=True, prog_bar=True)
 
     def on_validation_epoch_end(self) -> None:
         "Lightning hook that is called when a validation epoch ends."
@@ -124,11 +135,13 @@ class OperatorFormerModule(LightningModule):
             labels.
         :param batch_idx: The index of the current batch.
         """
-        loss, targets = self.model_step(batch)
+        loss, pred, target = self.model_step(batch)
 
         # update and log metrics
         self.test_loss(loss)
+        self.test_re(pred, target)
         self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test/relative_error", self.test_re, on_step=False, on_epoch=True, prog_bar=True)
 
     def on_test_epoch_end(self) -> None:
         """Lightning hook that is called when a test epoch ends."""
@@ -168,7 +181,8 @@ class OperatorFormerModule(LightningModule):
         optimizer = self.hparams["optimizer"](params=self.trainer.model.parameters())  # type: ignore
         if self.hparams["scheduler"] is not None:
             scheduler = self.hparams.scheduler(  # type: ignore
-                optimizer=optimizer
+                optimizer=optimizer,
+                total_steps=self.trainer.estimated_stepping_batches,
             )
             return {
                 "optimizer": optimizer,

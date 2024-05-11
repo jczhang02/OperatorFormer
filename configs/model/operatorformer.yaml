@@ -17,7 +17,6 @@ scheduler:
   _target_: torch.optim.lr_scheduler.OneCycleLR
   _partial_: true
   max_lr: ${model.optimizer.lr}
-  total_steps: ${trainer.max_epochs}
   # total_steps: 10
   div_factor: 1.0e4
   pct_start: 0.2
