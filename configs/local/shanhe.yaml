@@ -1,0 +1,11 @@
+# @package _global_
+
+defaults:
+  - override /hydra/launcher@_here_: submitit_slurm
+
+hydra:
+  launcher:
+    gpus_per_task: 1
+    name: ${task_name}
+    _target_: hydra_plugins.hydra_submitit_launcher.submitit_launcher.SlurmLauncher
+    partition: LocalQ

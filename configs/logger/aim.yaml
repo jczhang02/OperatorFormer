@@ -13,6 +13,7 @@ aim:
 
   # aim allows to group runs under experiment name
   experiment: null # any string, set to "default" if not specified
+  run_name: null
 
   train_metric_prefix: "train/"
   val_metric_prefix: "val/"

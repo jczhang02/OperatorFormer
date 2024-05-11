@@ -6,18 +6,10 @@ optimizer:
   lr: 8.0e-4
   weight_decay: 1.0e-4
 
-# scheduler:
-#   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-#   _partial_: true
-#   mode: min
-#   factor: 0.1
-#   patience: 10
-
 scheduler:
   _target_: torch.optim.lr_scheduler.OneCycleLR
   _partial_: true
   max_lr: ${model.optimizer.lr}
-  # total_steps: 10
   div_factor: 1.0e4
   pct_start: 0.2
   final_div_factor: 1.0e4

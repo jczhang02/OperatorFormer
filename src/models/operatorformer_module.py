@@ -5,7 +5,7 @@ from lightning import LightningModule
 from torch import Tensor, nn
 from torchmetrics import MeanMetric, MinMetric
 
-from .components import SimpleOperatorLearningL2Loss, RelativeError
+from .components import RelativeError, SimpleOperatorLearningL2Loss
 
 
 __all__ = ["OperatorFormerModule"]
@@ -20,7 +20,7 @@ class OperatorFormerModule(LightningModule):
         compile: bool,
     ) -> None:
         super().__init__()
-        self.save_hyperparameters(logger=False)
+        self.save_hyperparameters(logger=False, ignore=["net"])
         self.net = net
         self.criterion = SimpleOperatorLearningL2Loss()
 
@@ -187,7 +187,7 @@ class OperatorFormerModule(LightningModule):
                 "lr_scheduler": {
                     "scheduler": scheduler,
                     "monitor": "val/loss",
-                    "interval": "epoch",
+                    "interval": "step",
                     "frequency": 1,
                 },
             }

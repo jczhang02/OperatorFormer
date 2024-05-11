@@ -1,33 +1,28 @@
 # @package _global_
 
-# to execute this experiment run:
-# python train.py experiment=example
-
 defaults:
   - override /data: burges
   - override /model: operatorformer
   - override /callbacks: default
   - override /trainer: gpu
-  - override /logger: tensorboard
+  - override /logger: aim
 
-# all parameters below will be merged with parameters from default configurations set above
-# this allows you to overwrite only specified parameters
+task_name: "Burgres_1D_nhead"
 
-tags: ["operatorformer", "test"]
+tags: ["burgers1d"]
 
 seed: 114514
 
 trainer:
-  min_epochs: 20000
-  max_epochs: 20000
-  check_val_every_n_epoch: 1
-  # gradient_clip_val: 0.5
+  min_epochs: 10000
+  max_epochs: 10000
+  check_val_every_n_epoch: 10
   detect_anomaly: False
   deterministic: False
 
 model:
   optimizer:
-    lr: 8.0e-4
+    lr: 8e-4
   compile: false
   net:
     input_encoder_config:
@@ -39,6 +34,8 @@ model:
 data:
   batch_size: 16
   train_val_test_split: [1_024, 100, 200]
+
 logger:
-  tensorboard:
-    name: "Burges 1D Test Loss"
+  aim:
+    experiment: "Burgres 1D nhead"
+    run_name: "nhead_test"
