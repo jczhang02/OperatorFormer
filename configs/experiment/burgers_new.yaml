@@ -6,7 +6,7 @@
 defaults:
   - override /data: burges
   - override /model: operatorformer
-  - override /callbacks: noearrlystop
+  - override /callbacks: default
   - override /trainer: gpu
   - override /logger: tensorboard
 
@@ -41,3 +41,5 @@ data:
 logger:
   tensorboard:
     name: "Burgres 1D Test Loss Test New"
+  aim:
+    experiment: "Burgres 1D New Aim"

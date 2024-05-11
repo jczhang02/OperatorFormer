@@ -121,12 +121,10 @@ class OperatorFormerModule(LightningModule):
         self.val_loss_best(loss)
         # log `val_acc_best` as a value through `.compute()` method, instead of as a metric object
         # otherwise metric would be reset by lightning after each epoch
-        self.log(
-            "val/loss_best",
-            self.val_loss_best.compute(),
-            sync_dist=True,
-            prog_bar=True,
-        )
+        relative_error = self.val_re.compute()
+        self.val_re_best(relative_error)
+        self.log("val/loss_best", self.val_loss_best.compute(), sync_dist=True, prog_bar=True)
+        self.log("val/relative_error_best", self.val_re_best.compute(), sync_dist=True, prog_bar=True)
 
     def test_step(self, batch: Tuple[Tensor, Tensor, Tensor, Tensor], batch_idx: int) -> None:
         """Perform a single test step on a batch of data from the test set.

@@ -9,15 +9,16 @@ model_checkpoint:
   dirpath: ${paths.output_dir}/checkpoints
   filename: "epoch_{epoch:03d}"
   monitor: "val/loss"
-  mode: "max"
+  mode: "min"
+  every_n_epochs: 10
   save_last: True
   save_on_train_epoch_end: True
   auto_insert_metric_name: False
 
 early_stopping:
-  monitor: "val/loss"
+  monitor: "val/relative_error"
   patience: 100
-  mode: "max"
+  mode: "min"
 
 model_summary:
   max_depth: -1
